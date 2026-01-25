@@ -28,10 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* 2. Add the font variables to the body class */}
-      <body className={`${exo.variable} ${rampartOne.variable} antialiased bg-gray-50`}>
-        <Navbar />
-        {children}
-      </body>
+      <body className={`${exo.variable} ${rampartOne.variable} font-exo antialiased bg-gray-50`}>
+  <Navbar />
+  {children}
+</body>
     </html>
   );
 }

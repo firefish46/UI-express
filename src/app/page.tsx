@@ -1,59 +1,96 @@
-"use client";
-import { useState } from "react";
-import { components as staticComponents } from "@/data/components";
-import ComponentCard from "@/components/ComponentCard";
-import { Search } from "lucide-react";
-import { UIComponent } from "@/types";
+// src/app/page.tsx
+import { db } from "@/lib/db";
+import Link from "next/link";
+import { Code2, User, Layers } from "lucide-react";
 
-export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
+export const revalidate = 0;
 
-  // 1. Initialize state once from both sources. 
-  // This function runs once, preventing the "cascading render" error.
-  const [allComponents] = useState<UIComponent[]>(() => {
-    if (typeof window !== "undefined") {
-      const localData = localStorage.getItem("local-library");
-      const localComponents = localData ? JSON.parse(localData) : [];
-      // Combine local submissions first, then static ones
-      return [...localComponents, ...staticComponents];
-    }
-    return staticComponents;
+// Update the type to a Promise
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>; // Next.js 15+ requirement
+}) {
+  // Await the searchParams before using them
+  const resolvedParams = await searchParams;
+  const query = resolvedParams.q;
+
+  const components = await db.uIComponent.findMany({
+    where: query
+      ? {
+          OR: [
+            { title: { contains: query, mode: "insensitive" } },
+            { category: { contains: query, mode: "insensitive" } },
+            { author: { contains: query, mode: "insensitive" } },
+          ],
+        }
+      : {},
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
-  // 2. Derive filtered items during render
-  const filteredItems = allComponents.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <main className="p-8 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
-        <h1 className="text-4xl font-black text-slate-900">Browse Library</h1>
+    <main className="min-h-screen bg-slate-50/50 pb-20" style={{fontFamily:'exo'}}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         
-        <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input 
-            type="text"
-            placeholder="Search buttons, cards, animations..."
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm text-slate-900"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+              {query ? `Results for "${query}"` : "Explore Components"}
+            </h2>
+            <p className="text-slate-500 mt-1">
+              {components.length} professional components ready to use.
+            </p>
+          </div>
         </div>
-      </div>
 
-      {filteredItems.length === 0 ? (
-        <div className="text-center py-20 border-2 border-dashed border-slate-100 rounded-3xl">
-          <p className="text-gray-400 font-medium">No results for `{searchQuery}`</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredItems.map((item) => (
-            <ComponentCard key={item.id} item={item} />
-          ))}
-        </div>
-      )}
+        {components.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {components.map((item) => (
+              <div 
+                key={item.id} 
+             className="group bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm hover:border-[2px] hover:border-black transition-all duration-300"
+>
+                <div className="h-64 bg-slate-100/50 flex items-center justify-center relative overflow-hidden">
+                  <style dangerouslySetInnerHTML={{ 
+                    __html: `#preview-${item.id} { ${item.css} }` 
+                  }} />
+                  <div id={`preview-${item.id}`}>
+                    <div dangerouslySetInnerHTML={{ __html: item.html }} />
+                  </div>
+                  <div className="absolute top-5 left-5 bg-white shadow-sm border px-3 py-1 rounded-full text-[10px] font-black uppercase text-blue-600">
+                    {item.category}
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <h3 className="font-bold text-xl text-slate-900">{item.title}</h3>
+                  <div className="flex items-center gap-2 mt-1 text-slate-400 mb-4">
+                    <User size={14} />
+                    <span className="text-xs font-medium">by {item.author}</span>
+                  </div>
+                  
+                  <Link 
+                    href={`/view/${item.id}`}
+                    className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-blue-400 transition-all"
+                  >
+                    <Code2 size={18} />
+                    Get Code
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-slate-200">
+            <h3 className="text-xl font-bold text-slate-900">No components found</h3>
+            <Link href="/" className="mt-6 text-blue-600 font-bold hover:underline inline-block">
+              Clear search
+            </Link>
+          </div>
+        )}
+      </div>
     </main>
   );
 }

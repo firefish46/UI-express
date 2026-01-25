@@ -7,8 +7,8 @@ export default function ComponentViewer({ item }: { item: UIComponent }) {
   const [viewMode, setViewMode] = useState("desktop");
 
   const widths: Record<string, string> = {
-    mobile: "375px",
-    tablet: "640px",
+    mobile: "275px",
+    tablet: "440px",
     desktop: "100%",
   };
 
