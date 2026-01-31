@@ -16,5 +16,6 @@ model UIComponent {
   category  String
   html      String
   css       String
+  likes     Int      @default(0)
   createdAt DateTime @default(now())
 }

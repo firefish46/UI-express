@@ -56,21 +56,31 @@ const TEMPLATES = {
   Navbars: {
     html: '<nav class="custom-nav">\n  <a href="#">Home</a>\n  <a href="#">Explore</a>\n  <a href="#">Library</a>\n</nav>',
     css: `.custom-nav {
-  display: flex;
-  gap: 24px;
-  padding: 16px;
-  background: #f8fafc;
-  border-radius: 12px;
+  display: flex; gap: 24px; padding: 16px;
+  background: #f8fafc; border-radius: 12px;
 }
-
-.custom-nav a {
-  text-decoration: none;
-  color: #64748b;
-  font-weight: 600;
+.custom-nav a { text-decoration: none; color: #64748b; font-weight: 600; }
+.custom-nav a:hover { color: #2563eb; }`
+  },
+  Loaders: {
+    html: '<div class="spinner"></div>',
+    css: `.spinner {
+  width: 40px; height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
-
-.custom-nav a:hover {
-  color: #2563eb;
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`
+  },
+  Footers: {
+    html: '<footer class="mini-footer">\n  <p>© 2026 UI Express</p>\n</footer>',
+    css: `.mini-footer {
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  color: #888;
+  font-size: 14px;
 }`
   }
 };
@@ -234,16 +244,22 @@ const handlePublish = async () => {
                 value={title}
                 onChange={(e) => setDraft((prev) => ({ ...prev, title: e.target.value }))}
               />
-              <select
-                className="p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
-                value={category}
-                onChange={(e) => handleCategoryChange(e.target.value)}
-              >
-                <option value="Buttons">Buttons</option>
-                <option value="Cards">Cards</option>
-                <option value="Inputs">Inputs</option>
-                <option value="Navbars">Navbars</option>
-              </select>
+            <select
+  className="p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
+  value={category}
+  onChange={(e) => {
+    const newCat = e.target.value;
+    setDraft(prev => ({ ...prev, category: newCat })); // Update category state
+    handleCategoryChange(newCat); // Trigger template swap
+  }}
+>
+  <option value="Buttons">Buttons</option>
+  <option value="Cards">Cards</option>
+  <option value="Inputs">Inputs</option>
+  <option value="Navbars">Navbars</option>
+  <option value="Loaders">Loaders</option>
+  <option value="Footers">Footers</option>
+</select>
             </div>
 
             <input
