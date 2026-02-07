@@ -1,13 +1,13 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import { Exo, Rampart_One } from "next/font/google"; // 
+import { Exo, Rampart_One } from "next/font/google"; 
 import Footer from "@/components/Footer";
+import { Suspense } from "react"; // 1. Import Suspense
 
-// 1. Configure the fonts
 const exo = Exo({
   subsets: ["latin"],
   weight: ["100", "400", "700", "900"],
-  variable: "--font-exo", // This creates a CSS variable you can use anywhere
+  variable: "--font-exo",
 });
 
 const rampartOne = Rampart_One({
@@ -28,12 +28,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* 2. Add the font variables to the body class */}
-      <body className={`${exo.variable} ${rampartOne.variable} font-exo antialiased bg-gray-50`}>
-  <Navbar />
-  {children}
-  <Footer/>
-</body>
+      <body className={`${exo.variable} ${rampartOne.variable} font-exo antialiased bg-gray-50 flex flex-col min-h-screen`}>
+        {/* 2. Wrap Navbar in Suspense to fix the Vercel Build Error */}
+        <Suspense fallback={<div className="h-16 w-full bg-white border-b border-slate-200" />}>
+          <Navbar />
+        </Suspense>
+
+        {/* 3. Use flex-grow so Footer stays at the bottom on short pages */}
+        <main className="flex-grow">
+          {children}
+        </main>
+
+        <Footer/>
+      </body>
     </html>
   );
 }
