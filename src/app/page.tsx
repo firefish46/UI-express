@@ -2,8 +2,9 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { Code2, User, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import CategoryFilter from "@/components/CategoryFilter";
-import JSRunner from "@/components/JSRunner"; // Import your runner
+import JSRunner from "@/components/JSRunner"; 
 import { Prisma } from "@prisma/client";
+import { Suspense } from "react"; // 1. Import Suspense
 
 export const revalidate = 0;
 
@@ -58,7 +59,10 @@ export default async function HomePage({
           
           <div className="flex items-center gap-3">
             <span className="text-sm font-bold text-slate-400">Filter:</span>
-            <CategoryFilter />
+            {/* 2. Wrap CategoryFilter in Suspense to fix Vercel Build Error */}
+            <Suspense fallback={<div className="h-10 w-32 bg-slate-200 animate-pulse rounded-xl" />}>
+              <CategoryFilter />
+            </Suspense>
           </div>
         </div>
 
@@ -66,22 +70,20 @@ export default async function HomePage({
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {components.map((item) => (
-                <div key={item.id} className="group bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm hover: hover:border-blue-400/50 transition-all duration-300 flex flex-col">
+                <div key={item.id} className="group bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm hover:border-blue-400/50 transition-all duration-300 flex flex-col">
                   
                   {/* PREVIEW AREA */}
                   <div className="h-64 bg-slate-100/30 flex items-center justify-center relative overflow-hidden border-b border-slate-50">
                     
-                    {/* SCORING THE CSS: This ensures component A doesn't style component B */}
                     <style dangerouslySetInnerHTML={{ 
                       __html: `#wrapper-${item.id} { all: revert; } #wrapper-${item.id} ${item.css}` 
                     }} />
                     
-                    {/* WRAPPER: Used by JSRunner to scope the JavaScript 'scope' variable */}
                     <div id={`wrapper-${item.id}`} className="w-full h-full flex items-center justify-center">
                       <div dangerouslySetInnerHTML={{ __html: item.html }} />
                     </div>
 
-                    {/* JSRUNNER: Forces the JS to execute for each card individually */}
+                    {/* Ensure prop names match your JSRunner (scriptCode and componentId) */}
                     {item.js && <JSRunner scriptCode={item.js} componentId={item.id} />}
 
                     <div className="absolute top-5 left-5 bg-white/80 backdrop-blur-md shadow-sm border px-3 py-1 rounded-full text-[8px] font-black uppercase text-slate-500 tracking-widest">
@@ -95,7 +97,7 @@ export default async function HomePage({
                       <h3 className="font-bold text-xl text-slate-900 line-clamp-1">{item.title}</h3>
                       <div className="flex items-center gap-2 mt-1 text-slate-400 mb-6">
                         <User size={14} />
-                      <span className="text-xs font-medium">by {item.author}</span>
+                        <span className="text-xs font-medium">by {item.author}</span>
                       </div>
                     </div>
                     <Link href={`/view/${item.id}`} className="btn-hover w-full flex items-center justify-center gap-2 bg-slate-900 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all">
