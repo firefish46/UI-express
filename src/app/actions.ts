@@ -49,6 +49,7 @@ export async function saveComponent(formData: {
   category: string;
   html: string;
   css: string;
+  js: string; 
 }) {
   try {
     // 1. Basic Server-side Validation
@@ -65,6 +66,7 @@ export async function saveComponent(formData: {
         html: formData.html,
         css: formData.css,
         likes: 0, // Ensure likes start at 0, not null
+        js: formData.js,
       },
     });
 

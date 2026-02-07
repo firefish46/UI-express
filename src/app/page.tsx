@@ -1,7 +1,8 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { Code2, User, ChevronLeft, ChevronRight } from "lucide-react";
+import { Code2, User, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import CategoryFilter from "@/components/CategoryFilter";
+import JSRunner from "@/components/JSRunner"; // Import your runner
 import { Prisma } from "@prisma/client";
 
 export const revalidate = 0;
@@ -15,12 +16,10 @@ export default async function HomePage({
   const query = resolvedParams.q;
   const category = resolvedParams.category;
   
-  // Pagination logic
-  const itemsPerPage = 6; // Load only 6 at a time
+  const itemsPerPage = 6;
   const currentPage = Number(resolvedParams.page) || 1;
   const skip = (currentPage - 1) * itemsPerPage;
 
-  // Build the filter object
   const whereClause: Prisma.UIComponentWhereInput = {
     AND: [
       query ? {
@@ -33,7 +32,6 @@ export default async function HomePage({
     ]
   };
 
-  // Fetch data and total count for pagination
   const [components, totalCount] = await Promise.all([
     db.uIComponent.findMany({
       where: whereClause,
@@ -50,15 +48,12 @@ export default async function HomePage({
     <main className="min-h-screen bg-slate-50/50 pb-20 font-exo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         
-        {/* Header with Search Result info and Category Select */}
         <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-3xl font-black text-slate-900 tracking-tight">
               {query ? `Results for "${query}"` : category ? `${category} Collection` : "Explore Components"}
             </h2>
-            <p className="text-slate-500 mt-1">
-              Found {totalCount} professional components.
-            </p>
+            <p className="text-slate-500 mt-1">Found {totalCount} professional components.</p>
           </div>
           
           <div className="flex items-center gap-3">
@@ -67,27 +62,41 @@ export default async function HomePage({
           </div>
         </div>
 
-        {/* Grid Layout */}
         {components.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {components.map((item) => (
-                <div key={item.id} className="group bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm hover:border-[1px] hover:border-gray-400 transition-all duration-300">
-                  <div className="h-64 bg-slate-100/50 flex items-center justify-center relative overflow-hidden">
-                    <style dangerouslySetInnerHTML={{ __html: `#preview-${item.id} { ${item.css} }` }} />
-                    <div id={`preview-${item.id}`}>
+                <div key={item.id} className="group bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm hover: hover:border-blue-400/50 transition-all duration-300 flex flex-col">
+                  
+                  {/* PREVIEW AREA */}
+                  <div className="h-64 bg-slate-100/30 flex items-center justify-center relative overflow-hidden border-b border-slate-50">
+                    
+                    {/* SCORING THE CSS: This ensures component A doesn't style component B */}
+                    <style dangerouslySetInnerHTML={{ 
+                      __html: `#wrapper-${item.id} { all: revert; } #wrapper-${item.id} ${item.css}` 
+                    }} />
+                    
+                    {/* WRAPPER: Used by JSRunner to scope the JavaScript 'scope' variable */}
+                    <div id={`wrapper-${item.id}`} className="w-full h-full flex items-center justify-center">
                       <div dangerouslySetInnerHTML={{ __html: item.html }} />
                     </div>
-                    <div className="absolute top-5 left-5 bg-white shadow-sm border px-3 py-1 rounded-full text-[8px] font-black uppercase text-gray-400">
+
+                    {/* JSRUNNER: Forces the JS to execute for each card individually */}
+                    {item.js && <JSRunner scriptCode={item.js} componentId={item.id} />}
+
+                    <div className="absolute top-5 left-5 bg-white/80 backdrop-blur-md shadow-sm border px-3 py-1 rounded-full text-[8px] font-black uppercase text-slate-500 tracking-widest">
                       {item.category}
                     </div>
                   </div>
 
-                  <div className="p-6">
-                    <h3 style={{fontFamily:"exo"}} className="font-bold text-xl text-slate-900">{item.title}</h3>
-                    <div className="flex items-center gap-2 mt-1 text-slate-400 mb-4">
-                      <User size={14} />
+                  {/* INFO AREA */}
+                  <div className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="font-bold text-xl text-slate-900 line-clamp-1">{item.title}</h3>
+                      <div className="flex items-center gap-2 mt-1 text-slate-400 mb-6">
+                        <User size={14} />
                       <span className="text-xs font-medium">by {item.author}</span>
+                      </div>
                     </div>
                     <Link href={`/view/${item.id}`} className="btn-hover w-full flex items-center justify-center gap-2 bg-slate-900 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all">
                       <Code2 size={20} /> Get Code
@@ -97,21 +106,21 @@ export default async function HomePage({
               ))}
             </div>
 
-            {/* Pagination Controls */}
+            {/* PAGINATION */}
             {totalPages > 1 && (
-              <div className="mt-12 flex justify-center items-center gap-4">
+              <div className="mt-16 flex justify-center items-center gap-6">
                 <Link
                   href={`/?${new URLSearchParams({ ...resolvedParams, page: (currentPage - 1).toString() })}`}
-                  className={`p-2 rounded-lg border ${currentPage === 1 ? 'pointer-events-none opacity-30' : 'hover:bg-white'}`}
+                  className={`p-3 rounded-xl border-2 transition-all ${currentPage === 1 ? 'pointer-events-none opacity-20 border-slate-200' : 'bg-white border-slate-200 hover:border-blue-400 text-blue-600'}`}
                 >
                   <ChevronLeft />
                 </Link>
-                <span className="font-bold text-sm text-slate-600">
-                  Page {currentPage} of {totalPages}
-                </span>
+                <div className="px-6 py-2 bg-white border-2 border-slate-200 rounded-full text-sm font-black text-slate-700">
+                  {currentPage} <span className="text-slate-300 mx-1">/</span> {totalPages}
+                </div>
                 <Link
                   href={`/?${new URLSearchParams({ ...resolvedParams, page: (currentPage + 1).toString() })}`}
-                  className={`p-2 rounded-lg border ${currentPage === totalPages ? 'pointer-events-none opacity-30' : 'hover:bg-white'}`}
+                  className={`p-3 rounded-xl border-2 transition-all ${currentPage === totalPages ? 'pointer-events-none opacity-20 border-slate-200' : 'bg-white border-slate-200 hover:border-blue-400 text-blue-600'}`}
                 >
                   <ChevronRight />
                 </Link>
@@ -119,9 +128,13 @@ export default async function HomePage({
             )}
           </>
         ) : (
-          <div className="text-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-slate-200">
-            <h3 className="text-xl font-bold text-slate-900">No components found</h3>
-            <Link href="/" className="mt-6 text-blue-600 font-bold hover:underline inline-block">
+          <div className="text-center py-32 bg-white rounded-[4rem] border-4 border-dashed border-slate-100">
+            <div className="inline-flex p-6 bg-slate-50 rounded-full mb-4">
+               <Code2 size={40} className="text-slate-300" />
+            </div>
+            <h3 className="text-2xl font-black text-slate-900">No components found</h3>
+            <p className="text-slate-500 mt-2">Try adjusting your search or category filters.</p>
+            <Link href="/" className="mt-8 px-8 py-3 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all inline-block shadow-xl shadow-blue-100">
               Clear all filters
             </Link>
           </div>

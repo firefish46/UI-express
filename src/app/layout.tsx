@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Exo, Rampart_One } from "next/font/google"; // 
+import Footer from "@/components/Footer";
 
 // 1. Configure the fonts
 const exo = Exo({
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className={`${exo.variable} ${rampartOne.variable} font-exo antialiased bg-gray-50`}>
   <Navbar />
   {children}
+  <Footer/>
 </body>
     </html>
   );
