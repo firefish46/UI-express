@@ -8,44 +8,367 @@ import { saveComponent } from "@/app/actions";
 
 const TEMPLATES = {
   Buttons: {
-    html: '<button class="custom-btn">Hover Me</button>',
-    css: `.custom-btn {\n  padding: 12px 24px;\n  background: #2563eb;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  cursor: pointer;\n  transition: all 0.3s ease;\n}\n\n.custom-btn:hover {\n  background: #1d4ed8;\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);\n}`
+    html: `<button class="btn">Get Started</button>`,
+    css: `.btn {
+  padding: 12px 28px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+}
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}`
   },
   Cards: {
-    html: '<div class="custom-card">\n  <h3>Feature Card</h3>\n  <p>Hover over this card to see the effect.</p>\n</div>',
-    css: `.custom-card {\n  padding: 24px;\n  background: white;\n  border-radius: 16px;\n  border: 1px solid #e2e8f0;\n  transition: transform 0.3s ease;\n}\n\n.custom-card:hover {\n  transform: scale(1.02);\n  border-color: #3b82f6;\n}`
+    html: `<div class="card">
+  <div class="card-icon">✦</div>
+  <h3>Feature Title</h3>
+  <p>A concise description of this feature and the value it delivers to users.</p>
+</div>`,
+    css: `.card {
+  padding: 28px;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid #e8edf4;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  transition: transform 0.25s, box-shadow 0.25s;
+  max-width: 300px;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+.card-icon {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #2563eb;
+}
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #0f172a;
+}
+.card p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 14px;
+}`
   },
   Inputs: {
-    html: '<input type="text" class="custom-input" placeholder="Enter name...">',
-    css: `.custom-input {\n  padding: 12px 16px;\n  border: 2px solid #e2e8f0;\n  border-radius: 10px;\n  outline: none;\n  transition: border-color 0.2s;\n}\n\n.custom-input:focus {\n  border-color: #3b82f6;\n}`
+    html: `<div class="input-group">
+  <label for="name">Full Name</label>
+  <input id="name" type="text" class="input" placeholder="John Doe" />
+</div>`,
+    css: `.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+.input {
+  padding: 11px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #0f172a;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.input:focus {
+  border-color: #2563eb;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}`
   },
-  Navbars: {
-    html: '<nav class="custom-nav">\n  <a href="#">Home</a>\n  <a href="#">Explore</a>\n  <a href="#">Library</a>\n</nav>',
-    css: `.custom-nav {\n  display: flex; gap: 24px; padding: 16px;\n  background: #f8fafc; border-radius: 12px;\n}\n.custom-nav a { text-decoration: none; color: #64748b; font-weight: 600; }\n.custom-nav a:hover { color: #2563eb; }`
+  Navbar: {
+    html: `<nav class="navbar">
+  <span class="navbar-brand">Brand</span>
+  <div class="navbar-links">
+    <a href="#">Home</a>
+    <a href="#">Explore</a>
+    <a href="#">Library</a>
+    <a href="#" class="navbar-cta">Sign Up</a>
+  </div>
+</nav>`,
+    css: `.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e8edf4;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.navbar-brand {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.navbar-links a {
+  text-decoration: none;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navbar-links a:hover { color: #2563eb; }
+.navbar-cta {
+  padding: 8px 18px;
+  background: #2563eb;
+  color: #fff !important;
+  border-radius: 8px;
+  font-weight: 600 !important;
+}
+.navbar-cta:hover {
+  background: #1d4ed8;
+  color: #fff !important;
+}`
   },
-  Loaders: {
-    html: '<div class="spinner"></div>',
-    css: `.spinner {\n  width: 40px; height: 40px;\n  border: 4px solid #f3f3f3;\n  border-top: 4px solid #3498db;\n  border-radius: 50%;\n  animation: spin 1s linear infinite;\n}\n@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`
+  Loader: {
+    html: `<div class="spinner"></div>`,
+    css: `.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}`
   },
-  Footers: {
-    html: '<footer class="mini-footer">\n  <p>© 2026 UI Express</p>\n</footer>',
-    css: `.mini-footer {\n  padding: 20px;\n  text-align: center;\n  border-top: 1px solid #eee;\n  color: #888;\n  font-size: 14px;\n}`
+  Footer: {
+    html: `<footer class="footer">
+  <p class="footer-brand">Brand</p>
+  <p class="footer-copy">© 2026 Brand, Inc. All rights reserved.</p>
+</footer>`,
+    css: `.footer {
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #e8edf4;
+  width: 100%;
+  box-sizing: border-box;
+}
+.footer-brand {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 15px;
+  margin: 0;
+}
+.footer-copy {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
+}`
   },
   Forms: {
-    html: '<form class="custom-form">\n  <input type="text" placeholder="Username" />\n  <input type="password" placeholder="Password" />\n  <button type="submit">Login</button>\n</form>',    
-    css: `.custom-form {\n  display: flex; flex-direction: column; gap: 16px;\n}\n.custom-form input {\n  padding: 12px;\n  border: 1px solid #e2e8f0;\n  border-radius: 8px;\n  outline: none;\n}\n.custom-form input:focus {\n  border-color: #3b82f6;\n}\n.custom-form button {\n  padding: 12px;\n  background: #2563eb;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  cursor: pointer;\n}\n.custom-form button:hover {\n  background: #1d4ed8;\n}`
-    },
-  Navigation: {
-    html: '<ul class="breadcrumb">\n  <li><a href="#">Home</a></li>\n  <li><a href="#">Library</a></li>\n  <li>Current Page</li>\n</ul>',
-    css: `.breadcrumb {\n  list-style: none;\n  display: flex; gap: 8px;\n}\n.breadcrumb li {\n  color: #64748b;\n}\n.breadcrumb li a {\n  text-decoration: none;\n  color: #2563eb;\n}\n.breadcrumb li a:hover {\n  text-decoration: underline;\n}`
-  },  
+    html: `<form class="form">
+  <div class="form-header">
+    <h2>Welcome back</h2>
+    <p>Sign in to your account</p>
+  </div>
+  <input type="text" placeholder="Email address" />
+  <input type="password" placeholder="Password" />
+  <button type="submit">Sign In</button>
+</form>`,
+    css: `.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 32px;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid #e8edf4;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  max-width: 360px;
+}
+.form-header { margin-bottom: 6px; }
+.form-header h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  color: #0f172a;
+}
+.form-header p {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b;
+}
+.form input {
+  padding: 11px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form input:focus {
+  border-color: #2563eb;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+.form button {
+  padding: 12px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.form button:hover {
+  background: #1d4ed8;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}`
+  },
+  Breadcrumb: {
+    html: `<nav aria-label="Breadcrumb">
+  <ol class="breadcrumb">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Library</a></li>
+    <li aria-current="page">Current Page</li>
+  </ol>
+</nav>`,
+    css: `.breadcrumb {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+}
+.breadcrumb li { color: #94a3b8; }
+.breadcrumb li + li::before {
+  content: '/';
+  margin-right: 6px;
+  color: #cbd5e1;
+}
+.breadcrumb li a {
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.breadcrumb li a:hover { color: #1d4ed8; }
+.breadcrumb li[aria-current] {
+  color: #0f172a;
+  font-weight: 500;
+}`
+  },
   Modals: {
-    html: '<button class="open-modal  custom-btn">Open Modal</button>\n<div class="modal-overlay">\n  <div class="modal-content">\n    <h2>Modal Title</h2>\n    <p>This is a simple modal. Click outside to close.</p>\n  </div>\n</div>',
-    css: `.custom-btn {\n  padding: 12px 24px;\n  background: #2563eb;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  cursor: pointer;\n  transition: all 0.3s ease;\n}\n\n.custom-btn:hover {\n  background: #1d4ed8;\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);\n}\n\n.modal-overlay {\n  position: fixed; top: 0; left: 0; right: 0; bottom: 0;\n  background: rgba(0,0,0,0.5);\n  display: flex; align-items: center; justify-content: center;\n  opacity: 0; pointer-events: none;\n  transition: opacity 0.3s ease;\n}\n\n.modal-overlay.active {\n  opacity
-: 1; pointer-events: all;\n}\n\n.modal-content {\n  background: white;\n  padding: 24px;\n  border-radius: 16px;\n  max-width: 400px;\n  text-align: center;\n}`
+    html: `<button class="btn open-modal">Open Modal</button>
+<div class="modal-overlay">
+  <div class="modal">
+    <h2>Confirm Action</h2>
+    <p>Are you sure you want to proceed? This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn-ghost close-modal">Cancel</button>
+      <button class="btn">Confirm</button>
+    </div>
+  </div>
+</div>`,
+    css: `.btn {
+  padding: 11px 24px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn:hover {
+  background: #1d4ed8;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+.btn-ghost {
+  padding: 11px 24px;
+  background: transparent;
+  color: #64748b;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover {
+  border-color: #94a3b8;
+  color: #374151;
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal {
+  background: #fff;
+  padding: 32px;
+  border-radius: 20px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.15);
+}
+.modal h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #0f172a;
+}
+.modal p {
+  margin: 0 0 24px;
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 14px;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}`
   }
 };
-
 export default function SubmitPage() {
   const previewRef = useRef<HTMLDivElement>(null);
 

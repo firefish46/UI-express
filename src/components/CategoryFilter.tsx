@@ -3,7 +3,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-const CATEGORIES = ["All", "Buttons", "Cards", "Inputs", "Navbars", "Footers", "Loaders", "Forms", "Navigation", "Modals"];
+const CATEGORIES = ["All", "Buttons", "Cards", "Inputs", "Navbars", "Footers", "Loaders", "Forms",  "Modals"];
 
 export default function CategoryFilter() {
   const router = useRouter();
