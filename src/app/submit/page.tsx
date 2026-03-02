@@ -30,6 +30,19 @@ const TEMPLATES = {
   Footers: {
     html: '<footer class="mini-footer">\n  <p>© 2026 UI Express</p>\n</footer>',
     css: `.mini-footer {\n  padding: 20px;\n  text-align: center;\n  border-top: 1px solid #eee;\n  color: #888;\n  font-size: 14px;\n}`
+  },
+  Forms: {
+    html: '<form class="custom-form">\n  <input type="text" placeholder="Username" />\n  <input type="password" placeholder="Password" />\n  <button type="submit">Login</button>\n</form>',    
+    css: `.custom-form {\n  display: flex; flex-direction: column; gap: 16px;\n}\n.custom-form input {\n  padding: 12px;\n  border: 1px solid #e2e8f0;\n  border-radius: 8px;\n  outline: none;\n}\n.custom-form input:focus {\n  border-color: #3b82f6;\n}\n.custom-form button {\n  padding: 12px;\n  background: #2563eb;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  cursor: pointer;\n}\n.custom-form button:hover {\n  background: #1d4ed8;\n}`
+    },
+  Navigation: {
+    html: '<ul class="breadcrumb">\n  <li><a href="#">Home</a></li>\n  <li><a href="#">Library</a></li>\n  <li>Current Page</li>\n</ul>',
+    css: `.breadcrumb {\n  list-style: none;\n  display: flex; gap: 8px;\n}\n.breadcrumb li {\n  color: #64748b;\n}\n.breadcrumb li a {\n  text-decoration: none;\n  color: #2563eb;\n}\n.breadcrumb li a:hover {\n  text-decoration: underline;\n}`
+  },  
+  Modals: {
+    html: '<button class="open-modal  custom-btn">Open Modal</button>\n<div class="modal-overlay">\n  <div class="modal-content">\n    <h2>Modal Title</h2>\n    <p>This is a simple modal. Click outside to close.</p>\n  </div>\n</div>',
+    css: `.custom-btn {\n  padding: 12px 24px;\n  background: #2563eb;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  cursor: pointer;\n  transition: all 0.3s ease;\n}\n\n.custom-btn:hover {\n  background: #1d4ed8;\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);\n}\n\n.modal-overlay {\n  position: fixed; top: 0; left: 0; right: 0; bottom: 0;\n  background: rgba(0,0,0,0.5);\n  display: flex; align-items: center; justify-content: center;\n  opacity: 0; pointer-events: none;\n  transition: opacity 0.3s ease;\n}\n\n.modal-overlay.active {\n  opacity
+: 1; pointer-events: all;\n}\n\n.modal-content {\n  background: white;\n  padding: 24px;\n  border-radius: 16px;\n  max-width: 400px;\n  text-align: center;\n}`
   }
 };
 
